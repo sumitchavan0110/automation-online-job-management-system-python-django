@@ -14,7 +14,7 @@ spec:
         app: JobPortal
     spec:
     containers:
-      - name: JobPortal-container
+      - name: JobPortalcontainer
         image: sumitchavan0110/jobportalimage:latest
         command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
         ports:
