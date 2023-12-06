@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: JobPortal-app-service
+  name: JobPortal-container-app-deployment
 spec:
   type: NodePort
   selector:
@@ -9,4 +9,4 @@ spec:
   ports:
     - port: 8000
       targetPort: 8000
-      nodePort: 30011
+      nodePort: 30018
