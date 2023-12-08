@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    Home job portal app 
+    Home sumit_chavan job portal app 
 {% endblock %}
 
 {% block content %}
@@ -37,74 +37,6 @@
             </div>
         </div>
     </div>
-    <div class="modal-body">
-        <form action="" method="post" class="login-form">
-            <div class="form-group">
-                <label for="email_modal">Email</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                    <input id="email_modal" type="email" name="email" placeholder="Enter your email" class="form-control" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="password_modal">Password</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                    <input id="password_modal" type="password" name="password" placeholder="Enter your password" class="form-control" required>
-                    <span class="input-group-addon password-toggle"><i class="fa fa-eye"></i></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <p class="text-center">
-                    <button type="submit" class="btn btn-primary btn-login"><i class="fa fa-sign-in"></i> Log in</button>
-                </p>
-            </div>
-            <div class="form-group text-center">
-                <p class="text-muted">Not registered yet? <a href="{% url 'registration' %}" class="registration-link"><strong>Register now</strong></a>! It's quick and easy.</p>
-            </div>
-        </form>
-    </div>
-    
-    <style>
-        /* Add styles to improve the form layout and appearance */
-        .input-group-addon {
-            background-color: #f5f5f5;
-            border: 1px solid #ced4da;
-        }
-    
-        .password-toggle {
-            cursor: pointer;
-        }
-    
-        /* Additional styles for responsiveness */
-        @media (max-width: 767px) {
-            /* Add styles for smaller screens */
-            .btn-login {
-                width: 100%;
-            }
-    
-            .registration-link {
-                font-size: 0.85em;
-            }
-        }
-    </style>
-    
-    <script>
-        // Password visibility toggle functionality
-        const passwordField = document.getElementById('password_modal');
-        const passwordToggle = document.querySelector('.password-toggle');
-    
-        passwordToggle.addEventListener('click', function () {
-            const fieldType = passwordField.getAttribute('type');
-            if (fieldType === 'password') {
-                passwordField.setAttribute('type', 'text');
-                passwordToggle.innerHTML = '<i class="fa fa-eye-slash"></i>';
-            } else {
-                passwordField.setAttribute('type', 'password');
-                passwordToggle.innerHTML = '<i class="fa fa-eye"></i>';
-            }
-        });
-    </script>    
     <!-- *** LOGIN MODAL END ***-->
     <section class="job-form-section job-form-section--image">
         <div class="container">
@@ -230,7 +162,7 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <p>Start searching for your new job now! </p>
-                    <p><a href="{% url 'jobs:jobs' %}" class="btn btn-outline-light">See our exclusive job offers </a></p>
+                    <p><a href="{% url 'jobs:jobs' %}" class="btn btn-outline-light">See our job offers </a></p>
                 </div>
             </div>
         </div>
