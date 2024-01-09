@@ -13,7 +13,7 @@ spec:
       labels:
         app: jobportal
     spec:
-      containers:
+     containers:
         - name: jobportal-container
           image: sumitchavan0110/jobportalimage:latest
           command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
