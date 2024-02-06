@@ -35,7 +35,7 @@ pipeline {
         }
         stage('Start Minikube') {
             steps {
-                //sh '/usr/local/bin/minikube delete'
+                sh '/usr/local/bin/minikube delete'
                 sh '/usr/local/bin/minikube start'
                 
             }
