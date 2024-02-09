@@ -15,7 +15,7 @@ pipeline {
                 script {
                     sh '''
                         cd automation-online-job-management-system-python-django
-                        docker build -t sumitchavan0110/jobportalimage:latest .
+                        docker build -t sumitchavan0110/jobportalimage:v1 .
                     '''
                 }
             }
@@ -28,7 +28,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                         sh "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD"
                         // Push the Docker images to your Docker Hub repository
-                        sh 'docker push sumitchavan0110/jobportalimage:latest'
+                        sh 'docker push sumitchavan0110/jobportalimage:v1'
                     }
                 }
             }
