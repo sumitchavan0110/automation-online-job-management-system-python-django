@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jobportal-container-app
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  project: default
+  source:
+    repoURL: https://github.com/sumitchavan0110/automation-online-job-management-system-python-django.git
+    path: manifests
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
