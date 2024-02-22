@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobportal-container-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jobportal
+  template:
+    metadata:
+      name: jobportal-pod
+      labels:
+        app: jobportal
+    spec:
+      containers:
+        - name: jobportalcontainer
+          image: sumitchavan0110/jobportalimage:v1
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+          ports:
+            - containerPort: 8000
