@@ -6,15 +6,15 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Create and set the working directory inside the container
-WORKDIR /JobPortal
+WORKDIR /jobportal
 
 # Install Python dependencies
-COPY requirements.txt /JobPortal/
+COPY requirements.txt /jobportal/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Copy the Django project code into the container's working directory
-COPY . /JobPortal/
+COPY . /jobportal/
 
 # Expose the port on which Django will run (change it if your app uses a different port)
 EXPOSE 8000
