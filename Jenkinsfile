@@ -66,6 +66,6 @@ pipeline {
             steps {
                 sh '/usr/local/bin/minikube service --all'
             }
-        }
-    }*/
+        }*/
+    }
 }
