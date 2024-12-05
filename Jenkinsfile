@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         // SonarQube Configuration
-        SONARQUBE_SERVER = 'http://172.28.95.37:9000'  // Update this to your SonarQube server URL
+        SONARQUBE_SERVER = 'http://172.17.255.255:9000'  // Update this to your SonarQube server URL
         SONARQUBE_PROJECT_KEY = 'jobportal'  // Update this to your SonarQube project key
-        SONARQUBE_TOKEN = 'sqp_d71cf354e237a65f6011cd03657d2fa738614901'  // Your SonarQube token
+        SONARQUBE_TOKEN = 'squ_a83d99b633295383cf047924a5005967029dadbe'  // Your SonarQube token
         SOURCE_DIR = 'automation-online-job-management-system-python-django'  // Path to your source code
 
         // Docker Configuration
