@@ -5,6 +5,7 @@ pipeline {
         stage('git clone') {
             steps {
                 script {
+                    sh "sudo rm -r *"
                     sh "git clone https://github.com/sumitchavan0110/automation-online-job-management-system-python-django.git"
                 }
             }
