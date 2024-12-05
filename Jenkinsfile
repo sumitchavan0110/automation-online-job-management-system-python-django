@@ -2,55 +2,43 @@ pipeline {
     agent any
 
     environment {
-        // SonarQube Configuration
-        SONARQUBE_SERVER = 'http://172.17.255.255:9000'  // Update this to your SonarQube server URL
-        SONARQUBE_PROJECT_KEY = 'jobportalsonar'  // Update this to your SonarQube project key
-        SONARQUBE_TOKEN = 'squ_a83d99b633295383cf047924a5005967029dadbe'  // Your SonarQube token
-        SOURCE_DIR = 'automation-online-job-management-system-python-django'  // Path to your source code
-
-        // Docker Configuration
-        DOCKER_IMAGE = 'sumitchavan0110/jobportalimage:v9'
-        DOCKER_REPO = 'sumitchavan0110/jobportalimage'
-        DOCKER_TAG = 'v9'
+        SONARQUBE_SERVER = 'http://localhost:9000'
+        PROJECT_KEY = 'jobportalsonar' 
+        SONARQUBE_TOKEN = 'squ_a83d99b633295383cf047924a5005967029dadbe' 
+        SOURCE_DIR = 'automation-online-job-management-system-python-django' 
+        DOCKER_IMAGE = 'sumitchavan0110/jobportalimage:v9' 
     }
 
     stages {
-        // Stage 1: Git Clone
-        stage('Git Clone') {
+        stage('Checkout Code') {
             steps {
                 script {
-                    // Clean up workspace if necessary
-                    sh "rm -rf *"
-                    // Clone the repository
-                    sh "git clone https://github.com/sumitchavan0110/automation-online-job-management-system-python-django.git"
+                    def gitRepoUrl = 'https://github.com/sumitchavan0110/automation-online-job-management-system-python-django.git' 
+                    checkout([$class: 'GitSCM', branches: [[name: 'main']],
+                        userRemoteConfigs: [[url: gitRepoUrl]]])
                 }
             }
         }
 
-        // Stage 2: SonarQube Analysis
-        stage('SonarQube Analysis') {
+        stage('Run SonarQube Analysis') {
             steps {
                 script {
-                    // Run SonarQube analysis on the source code
                     withSonarQubeEnv('MySonarQube') {
                         sh '''
-                            cd $SOURCE_DIR
                             sonar-scanner \
-                                -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY \
-                                -Dsonar.sources=. \
-                                -Dsonar.host.url=$SONARQUBE_SERVER \
-                                -Dsonar.login=$SONARQUBE_TOKEN
+                            -Dsonar.projectKey=${jobportalsonar} \
+                            -Dsonar.sources=${automation-online-job-management-system-python-django} \
+                            -Dsonar.host.url=${localhost:9000} \
+                            -Dsonar.login=${squ_a83d99b633295383cf047924a5005967029dadbe}
                         '''
                     }
                 }
             }
         }
 
-        // Stage 3: Wait for SonarQube Quality Gate
-        stage('Quality Gate') {
+        stage('Quality Gate Status Check') {
             steps {
                 script {
-                    // Wait for SonarQube quality gate to pass
                     def qualityGate = waitForQualityGate()
                     if (qualityGate.status != 'OK') {
                         error "Quality Gate failed: ${qualityGate.status}"
@@ -61,66 +49,70 @@ pipeline {
             }
         }
 
-        // Stage 4: Docker Build
-        stage('Docker Build') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Navigate to the cloned repository and build the Docker image
                     sh '''
-                        cd automation-online-job-management-system-python-django
-                        docker build -t $DOCKER_REPO:$DOCKER_TAG . 
+                        docker images -q | grep -v '67a4b1138d2d' | grep -v 'e3295fe6246a' | xargs -I {} docker rmi -f {}
+                        docker-compose build
                     '''
                 }
             }
         }
 
-        // Stage 5: Push Docker Image to Docker Hub
-        stage('Push Docker Image to Docker Hub') {
+        /*
+        stage('Run Trivy Scan') {
             steps {
                 script {
-                    // Log in to Docker Hub using Jenkins credentials
-                    withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-                        // Docker login
-                        sh "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD"
-                        // Push the Docker image to Docker Hub
-                        sh "docker push $DOCKER_REPO:$DOCKER_TAG"
+                    def result = sh(
+                        script: "trivy image --exit-code 1 --no-progress --format table -o trivy-report.txt ${DOCKER_IMAGE}",
+                        returnStatus: true
+                    )
+                    echo "Trivy scan completed with exit code: ${result}"
+                    if (result != 0) {
+                        echo "Vulnerabilities found in the image. Please review the Trivy report."
                     }
                 }
             }
         }
 
-        // Uncomment and modify if you want to add Kubernetes deployment stages
-        /*
-        stage('Start Minikube') {
+        stage('Publish Trivy Report') {
             steps {
-                sh '/usr/local/bin/minikube delete'
-                sh '/usr/local/bin/minikube start'
-            }
-        }
-
-        stage('Kubectl Deployment') {
-            steps {
-                sh '''
-                    cd automation-online-job-management-system-python-django
-                    /usr/local/bin/kubectl apply -f deployment.yml
-                '''
-            }
-        }
-
-        stage('Kubectl Service') {
-            steps {
-                sh '''
-                    cd automation-online-job-management-system-python-django
-                    /usr/local/bin/kubectl apply -f service.yml
-                '''
-            }
-        }
-
-        stage('List Minikube Services') {
-            steps {
-                sh '/usr/local/bin/minikube service --all'
+                script {
+                    sh "ls -l trivy-report.txt"
+                    archiveArtifacts artifacts: 'trivy-report.txt', allowEmptyArchive: true
+                }
             }
         }
         */
+
+        stage('Push Image to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockercred', 
+                        usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sh '''
+                            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+                            docker push ${DOCKER_IMAGE}
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Kubernetes Deployment') {
+            steps {
+                script {
+                    withKubeConfig([credentialsId: 'mymini_cred']) {
+                        sh '''
+                            kubectl apply -f job_dep.yml
+                            kubectl apply -f service.yml
+                            kubectl get pods
+                            kubectl get deployments
+                        '''
+                    }
+                }
+            }
+        }
     }
 }
