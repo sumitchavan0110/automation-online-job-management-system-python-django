@@ -10,5 +10,5 @@ spec:
     - protocol: TCP
       port: 8000
       targetPort: 8000
-      nodePort: 30013
+      nodePort: 30012
       
