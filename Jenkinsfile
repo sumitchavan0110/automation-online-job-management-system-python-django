@@ -1,13 +1,13 @@
 pipeline {
     agent any
 
-    environment {
+    /*environment {
         SONARQUBE_SERVER = 'http://localhost:9000'
         PROJECT_KEY = 'jobportalsonar' 
         SONARQUBE_TOKEN = 'squ_a83d99b633295383cf047924a5005967029dadbe' 
         SOURCE_DIR = 'automation-online-job-management-system-python-django' 
         DOCKER_IMAGE = 'sumitchavan0110/jobportalimage:v9' 
-    }
+    }*/
 
     stages {
         stage('Checkout Code') {
