@@ -4,7 +4,7 @@ pipeline {
     environment {
         SONARQUBE_SERVER = 'http://localhost:9000'
         PROJECT_KEY = 'jobportalsonar'
-        SONARQUBE_TOKEN = 'squ_9468c1eb61772136ac64bee07db6101f148336e2'
+        SONARQUBE_TOKEN = 'sqa_5f11f398071eac0f8d8946a28632d23e4667c894'
         SOURCE_DIR = 'automation-online-job-management-system-python-django'
         DOCKER_IMAGE = 'sumitchavan0110/jobportalimage:v9'
     }
